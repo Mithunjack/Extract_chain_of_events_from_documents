@@ -1,15 +1,17 @@
 import os
-from openai import AsyncOpenAI
+from langchain.chat_models import ChatOpenAI
+from langchain.prompts import ChatPromptTemplate
+from langchain_core.output_parsers  import StrOutputParser
+from langchain_core.runnables import Runnable
+from langchain_core.runnables.config import RunnableConfig
+from prompts import basic_event_prompt_template, event_instruction_template
 
 import chainlit as cl
-
-
-client = AsyncOpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
 settings = {
     "model": "gpt-3.5-turbo",
     "temperature": 0.7,
-    "max_tokens": 500,
+    "max_tokens": 2000,
     "top_p": 1,
     "frequency_penalty": 0,
     "presence_penalty": 0,
@@ -18,28 +20,31 @@ settings = {
 
 @cl.on_chat_start
 async def on_chat_start():
-    cl.user_session.set(
-        "message_history",
-        [{"role": "system", "content": "You are a helpful assistant."}],
+    model = ChatOpenAI(streaming=True, openai_api_key=os.environ["OPENAI_API_KEY"])
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                event_instruction_template
+            ),
+            ("human", "{question}"),
+        ]
     )
-    await cl.Message(content="Connected to Chainlit!").send()
+    output_parser = StrOutputParser()
+    runnable: Runnable = prompt | model | output_parser
+    cl.user_session.set("runnable", runnable)
 
 
 @cl.on_message
 async def on_message(message: cl.Message):
-    message_history = cl.user_session.get("message_history")
-    message_history.append({"role": "user", "content": message.content})
+    runnable = cl.user_session.get("runnable")  # type: Runnable
 
     msg = cl.Message(content="")
+    print(message.content)
+    async for chunk in runnable.astream(
+        {"question": message.content},
+        config=RunnableConfig(callbacks=[cl.LangchainCallbackHandler()]),
+    ):
+        await msg.stream_token(chunk)
+
     await msg.send()
-
-    stream = await client.chat.completions.create(
-        messages=message_history, stream=True, **settings
-    )
-
-    async for part in stream:
-        if token := part.choices[0].delta.content or "":
-            await msg.stream_token(token)
-
-    message_history.append({"role": "assistant", "content": msg.content})
-    await msg.update()
