@@ -24,7 +24,7 @@ function App() {
   return (
     <>
       <div className="flex flex-row">
-        <Playground setListData={setListData} />
+        <Playground />
         <EventGraph listData={listData} />
       </div>
     </>

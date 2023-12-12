@@ -26,14 +26,6 @@ export default function Playground() {
         createdAt: new Date().toISOString(),
       };
       sendMessage(message, []);
-      // setListData((prevListData) => [
-      //   ...prevListData,
-      //   {
-      //     time: message.createdAt,
-      //     title: message.author,
-      //     body: message.content,
-      //   },
-      // ]);
       setInputValue("");
     }
   };
