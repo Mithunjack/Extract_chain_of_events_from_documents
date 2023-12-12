@@ -1,21 +1,31 @@
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { v4 as uuidv4 } from "uuid";
-
 import {
   useChatInteract,
   useChatMessages,
   IMessage,
 } from "@chainlit/react-client";
-import { useState } from "react";
 
-export function Playground() {
+interface PlaygroundProps {
+  setListData: React.Dispatch<
+    React.SetStateAction<{
+      time: string;
+      title: string;
+      body: string;
+    }[]>
+  >;
+}
+
+export default function Playground({ setListData }: PlaygroundProps) {
   const [inputValue, setInputValue] = useState("");
   const { sendMessage } = useChatInteract();
   const { messages } = useChatMessages();
 
   const handleSendMessage = () => {
     const content = inputValue.trim();
+
     if (content) {
       const message = {
         id: uuidv4(),
@@ -25,11 +35,20 @@ export function Playground() {
         createdAt: new Date().toISOString(),
       };
       sendMessage(message, []);
+      setListData((prevListData) => [
+        ...prevListData,
+        {
+          time: message.createdAt,
+          title: message.author,
+          body: message.content,
+        },
+      ]);
       setInputValue("");
     }
   };
 
   const renderMessage = (message: IMessage) => {
+
     const dateOptions: Intl.DateTimeFormatOptions = {
       hour: "2-digit",
       minute: "2-digit",
@@ -51,7 +70,7 @@ export function Playground() {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex flex-col w-full">
-      <div className="flex-1 overflow-auto p-6">
+      <div className="flex-1 overflow-y-auto p-6">
         <div className="space-y-4">
           {messages.map((message) => renderMessage(message))}
         </div>
