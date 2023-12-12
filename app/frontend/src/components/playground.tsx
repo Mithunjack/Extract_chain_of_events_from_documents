@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { v4 as uuidv4 } from "uuid";
@@ -8,17 +8,8 @@ import {
   IMessage,
 } from "@chainlit/react-client";
 
-interface PlaygroundProps {
-  setListData: React.Dispatch<
-    React.SetStateAction<{
-      time: string;
-      title: string;
-      body: string;
-    }[]>
-  >;
-}
 
-export default function Playground({ setListData }: PlaygroundProps) {
+export default function Playground() {
   const [inputValue, setInputValue] = useState("");
   const { sendMessage } = useChatInteract();
   const { messages } = useChatMessages();
@@ -35,14 +26,14 @@ export default function Playground({ setListData }: PlaygroundProps) {
         createdAt: new Date().toISOString(),
       };
       sendMessage(message, []);
-      setListData((prevListData) => [
-        ...prevListData,
-        {
-          time: message.createdAt,
-          title: message.author,
-          body: message.content,
-        },
-      ]);
+      // setListData((prevListData) => [
+      //   ...prevListData,
+      //   {
+      //     time: message.createdAt,
+      //     title: message.author,
+      //     body: message.content,
+      //   },
+      // ]);
       setInputValue("");
     }
   };
