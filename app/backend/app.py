@@ -2,9 +2,13 @@ import os
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 from langchain_core.output_parsers  import StrOutputParser
-from langchain_core.runnables import Runnable
+from langchain_core.runnables import Runnable, RunnablePassthrough
 from langchain_core.runnables.config import RunnableConfig
-from prompts import basic_event_prompt_template, event_instruction_template
+from langchain.vectorstores import chroma
+from langchain.document_loaders.pdf import PyPDFDirectoryLoader
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from prompts import event_instruction_template
 
 import chainlit as cl
 
@@ -17,9 +21,26 @@ settings = {
     "presence_penalty": 0,
 }
 
+DATA_PATH="data/"
+DB_PATH = "vectorstores/db/"
+
+def index_vector_db():
+    loader = PyPDFDirectoryLoader(DATA_PATH)
+    documents = loader.load()
+    print(f"Processed {len(documents)} pdf files")
+    print(documents)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=50)
+    texts=text_splitter.split_documents(documents)
+    print('texts', texts)
+    vectorstore = chroma.Chroma.from_documents(documents=texts, embedding=OpenAIEmbeddings(model="text-embedding-ada-002"),persist_directory=DB_PATH)      
+    vectorstore.persist()
+    print('data saved')
 
 @cl.on_chat_start
 async def on_chat_start():
+    index_vector_db()
+    vectorstore = chroma.Chroma(persist_directory=DB_PATH, embedding_function=OpenAIEmbeddings(model="text-embedding-ada-002"))
+
     model = ChatOpenAI(streaming=True, openai_api_key=os.environ["OPENAI_API_KEY"])
     prompt = ChatPromptTemplate.from_messages(
         [
@@ -31,7 +52,13 @@ async def on_chat_start():
         ]
     )
     output_parser = StrOutputParser()
-    runnable: Runnable = prompt | model | output_parser
+    retriever = vectorstore.as_retriever()
+    runnable: Runnable = (
+        {'context': retriever,'question': RunnablePassthrough()}
+        | prompt 
+        | model 
+        | output_parser
+        )
     cl.user_session.set("runnable", runnable)
 
 
