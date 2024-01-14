@@ -24,7 +24,7 @@ const EventGraph = () => {
   }
   
   return (
-    <div className="mt-10 ml-10 w-30">
+    <div className="mt-10 ml-10 w-30 max-w-sm p-2">
       <Timeline>
         { temp.map((item, index) => (
           <Timeline.Item key={index}>
