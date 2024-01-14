@@ -41,7 +41,7 @@ export default function Playground() {
       dateOptions
     );
     return (
-      <div key={message.id} className="flex items-start space-x-2">
+      <div key={message.id} className="flex items-start space-x-2 overflow-y-auto">
         <div className="w-20 text-sm text-green-500">{message.author}</div>
         <div className="flex-1 border rounded-lg p-2">
           <p className="text-black dark:text-white">{message.content}</p>
@@ -70,10 +70,11 @@ export default function Playground() {
             onKeyUp={(e) => {
               if (e.key === "Enter") {
                 handleSendMessage();
+                clearTimeLine();
               }
             }}
           />
-          <Button onClick={handleSendMessage} type="submit">
+          <Button onClick={handleSendMessage && clearTimeLine} type="submit">
             Send
           </Button>
         </div>
