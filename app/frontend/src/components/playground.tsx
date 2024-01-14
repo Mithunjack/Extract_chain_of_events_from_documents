@@ -70,11 +70,10 @@ export default function Playground() {
             onKeyUp={(e) => {
               if (e.key === "Enter") {
                 handleSendMessage();
-                clearTimeLine();
               }
             }}
           />
-          <Button onClick={handleSendMessage && clearTimeLine} type="submit">
+          <Button onClick={handleSendMessage } type="submit">
             Send
           </Button>
         </div>
