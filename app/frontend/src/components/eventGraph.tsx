@@ -1,32 +1,35 @@
+import { useState, useEffect } from 'react';
 import { Timeline } from 'flowbite-react';
 import { HiCalendar } from 'react-icons/hi';
-
 import {
   useChatMessages,
   useChatData,
 } from "@chainlit/react-client";
 
 const EventGraph = () => {
-
   const { messages } = useChatMessages();
-
   const { loading } = useChatData();
 
+  const [eventData, setEventData] = useState([]);
 
-  let temp = [];
-  const allmessages = !loading ? messages.filter((message) => message.author !== "user"): [];
+  useEffect(() => {
+    if (!loading) {
+      const filteredMessages = messages.filter(message => message.author !== "user");
+      if (filteredMessages.length !== 0) {
+        try {
+          const latestMessage = JSON.parse(filteredMessages[0].content?.toString() || "");
+          setEventData(latestMessage);
+        } catch (error) {
+          console.error('Error parsing message content:', error);
+        }
+      }
+    }
+  }, [messages, loading]); // Dependency array includes messages and loading
 
-  
-  if(allmessages.length !== 0){
-    console.log(allmessages[0].content);
-    temp = JSON.parse(allmessages[0].content?.toString() || "");
-    console.log(temp);
-  }
-  
   return (
     <div className="m-4 w-30 max-w-sm p-2">
       <Timeline>
-        { temp.map((item, index) => (
+        {eventData.map((item, index) => (
           <Timeline.Item key={index}>
             <Timeline.Point icon={HiCalendar} />
             <Timeline.Content>
