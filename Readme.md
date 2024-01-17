@@ -15,6 +15,8 @@ Create a `./chainlit-backend/.env` file:
 ```.env
 OPENAI_API_KEY=YOUR_KEY
 ```
+### Venv setup
+`.\venv\Scripts\activate`
 
 Start the server in headless mode:
 
