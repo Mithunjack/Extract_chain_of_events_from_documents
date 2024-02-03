@@ -21,14 +21,14 @@ OPENAI_API_KEY=YOUR_KEY
 Start the server in headless mode:
 
 ```shell
-cd ./chainlit-backend
+cd ./app/chainlit-backend
 chainlit run app.py -h
 ```
 
 ## Start the React app
 
 ```shell
-cd ./frontend
+cd ./app/frontend
 npm i
 npm run dev
 ```
