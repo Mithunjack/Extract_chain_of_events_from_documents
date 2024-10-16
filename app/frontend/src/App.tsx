@@ -19,6 +19,7 @@ function App() {
     <>
       <div className="flex flex-row">
         <Playground />
+        <Playground />
         <EventGraph />
       </div>
     </>
