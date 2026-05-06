@@ -12,8 +12,15 @@ export function EntitySpotlight({
   onSelect
 }: EntitySpotlightProps) {
   return (
-    <section className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
-      <p className="text-xs uppercase tracking-[0.35em] text-gold">Entity Atlas</p>
+    <section className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-4">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <p className="text-[11px] uppercase tracking-[0.3em] text-gold">Characters</p>
+          <p className="mt-1 text-sm text-slate-400">
+            Select one entity to focus the timeline.
+          </p>
+        </div>
+      </div>
       <div className="mt-4 flex max-h-28 flex-wrap gap-2 overflow-y-auto pr-1">
         {entities.map((entity) => {
           const selected = entity.canonical_name === activeEntity;
@@ -22,7 +29,7 @@ export function EntitySpotlight({
               key={entity.id}
               type="button"
               onClick={() => onSelect(entity.canonical_name)}
-              className={`rounded-full border px-4 py-2 text-sm transition ${
+              className={`rounded-full border px-3 py-1.5 text-sm transition ${
                 selected
                   ? "border-gold bg-gold/15 text-gold"
                   : "border-white/10 bg-white/[0.03] text-white hover:border-sapphire/40"

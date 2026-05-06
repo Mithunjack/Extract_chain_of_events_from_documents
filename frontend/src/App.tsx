@@ -142,81 +142,78 @@ export default function App() {
 
   return (
     <main className="min-h-screen bg-ink text-white">
-      <div className="mx-auto max-w-[1600px] px-3 py-3 md:px-6 md:py-4 lg:px-8">
-        <section className="overflow-hidden rounded-[2.5rem] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.18),transparent_26%),radial-gradient(circle_at_top_right,rgba(244,201,107,0.18),transparent_28%),linear-gradient(160deg,#0b1320,#10192c_45%,#08111d)] p-4 shadow-glow md:p-6">
-          <div className="grid gap-4 lg:grid-cols-[300px,1fr]">
+      <div className="mx-auto max-w-[1480px] px-3 py-3 md:px-4 md:py-4 lg:px-6">
+        <section className="overflow-hidden rounded-[2rem] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.1),transparent_22%),linear-gradient(180deg,#0d1522,#0a111b_55%,#09111a)] shadow-glow">
+          <div className="grid min-h-[calc(100vh-1.5rem)] gap-0 lg:grid-cols-[280px,1fr]">
             <DocumentRail
               documents={documents}
               activeDocumentId={activeDocumentId}
               onSelect={setActiveDocumentId}
             />
 
-            <div className="space-y-4">
-              <header className="flex flex-col gap-4 rounded-[2rem] border border-white/10 bg-white/[0.03] p-5 backdrop-blur lg:flex-row lg:items-end lg:justify-between">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.38em] text-gold">
-                    Narrative Atlas
-                  </p>
-                  <h1 className="mt-3 max-w-3xl font-display text-3xl leading-tight text-white md:text-4xl xl:text-5xl">
-                    Cinematic timelines for long-form documents.
-                  </h1>
-                  <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300">
-                    Upload a novel, extract the major entities automatically, and move
-                    through a premium story map that shows a character&apos;s chain of events
-                    from beginning to end.
-                  </p>
-                </div>
-                <div className="grid gap-3 sm:grid-cols-3 lg:max-w-[520px]">
-                  {[
-                    ["Local-first", "No paid API dependency"],
-                    ["Entity-centric", "Timelines built after upload"],
-                    ["Evidence-grounded", "Chat answers keep citations"]
-                  ].map(([title, body]) => (
-                    <div
-                      key={title}
-                      className="rounded-[1.5rem] border border-white/10 bg-black/10 px-4 py-4"
-                    >
-                      <div className="font-display text-xl text-white">{title}</div>
-                      <div className="mt-2 text-sm text-slate-400">{body}</div>
-                    </div>
-                  ))}
+            <div className="flex min-h-[calc(100vh-1.5rem)] flex-col border-t border-white/10 lg:border-l lg:border-t-0">
+              <header className="border-b border-white/10 bg-black/10 px-4 py-4 backdrop-blur md:px-6">
+                <div className="mx-auto flex w-full max-w-[920px] items-start justify-between gap-4">
+                  <div>
+                    <p className="text-[11px] uppercase tracking-[0.32em] text-gold">
+                      Narrative Atlas
+                    </p>
+                    <h1 className="mt-2 font-display text-2xl text-white md:text-3xl">
+                      Narrative workspace
+                    </h1>
+                    <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">
+                      Upload a book, pick a character, and ask for a clean chain of
+                      events without the interface getting in your way.
+                    </p>
+                  </div>
+                  <div className="hidden items-center gap-2 lg:flex">
+                    {["Local-first", "Entity-centric", "Evidence-grounded"].map((item) => (
+                      <span
+                        key={item}
+                        className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-slate-300"
+                      >
+                        {item}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </header>
 
-              <UploadPanel onUpload={handleUpload} uploading={uploading} />
+              <div className="flex-1 overflow-y-auto px-4 py-4 md:px-6">
+                <div className="mx-auto flex w-full max-w-[920px] flex-col gap-4">
+                  <UploadPanel onUpload={handleUpload} uploading={uploading} />
 
-              {error ? (
-                <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-100">
-                  {error}
+                  {error ? (
+                    <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-100">
+                      {error}
+                    </div>
+                  ) : null}
+
+                  <EntitySpotlight
+                    entities={entities}
+                    activeEntity={activeEntity}
+                    onSelect={setActiveEntity}
+                  />
+
+                  <ChatPanel onSubmit={handleAsk} disabled={!activeDocumentId} />
+
+                  <CinematicTimeline
+                    entity={timeline.entity}
+                    overview={timeline.overview}
+                    events={timeline.events}
+                  />
+
+                  {!documents.length ? (
+                    <EmptyState
+                      title="No document ingested yet"
+                      description="The workspace is ready. Upload a long-form PDF to switch from the preview state into grounded character analysis."
+                    />
+                  ) : null}
                 </div>
-              ) : null}
-
-              <EntitySpotlight
-                entities={entities}
-                activeEntity={activeEntity}
-                onSelect={setActiveEntity}
-              />
-
-              <div className="grid gap-4 xl:grid-cols-[minmax(0,1.55fr),minmax(340px,0.95fr)]">
-                <CinematicTimeline
-                  entity={timeline.entity}
-                  overview={timeline.overview}
-                  events={timeline.events}
-                />
-                <ChatPanel onSubmit={handleAsk} disabled={!activeDocumentId} />
               </div>
             </div>
           </div>
         </section>
-
-        {!documents.length ? (
-          <div className="mt-4 xl:hidden">
-            <EmptyState
-              title="No document ingested yet"
-              description="The interface is ready with a premium preview timeline, but upload a long-form PDF to switch from demo storytelling into grounded, document-backed analysis."
-            />
-          </div>
-        ) : null}
       </div>
     </main>
   );

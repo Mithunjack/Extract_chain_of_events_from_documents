@@ -18,16 +18,16 @@ export function UploadPanel({ onUpload, uploading }: UploadPanelProps) {
   }
 
   return (
-    <section className="rounded-[2rem] border border-gold/20 bg-[radial-gradient(circle_at_top,#19304f,transparent_60%),linear-gradient(135deg,#101c2d,#0b1320)] p-5 shadow-glow">
+    <section className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-4">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.35em] text-gold">Upload</p>
-          <h2 className="mt-3 font-display text-2xl text-white xl:text-[1.75rem]">
-            Drop a novel and let the timeline engine start reading.
+          <p className="text-[11px] uppercase tracking-[0.3em] text-gold">Upload</p>
+          <h2 className="mt-2 font-display text-xl text-white">
+            Add a document to start the analysis.
           </h2>
-          <p className="mt-2 max-w-xl text-sm leading-6 text-slate-300">
-            The analysis begins immediately after upload and prepares character-centric
-            chains of events for exploration.
+          <p className="mt-2 max-w-xl text-sm leading-6 text-slate-400">
+            Narrative extraction begins after upload, then the workspace stays compact
+            while you explore characters and ask questions.
           </p>
         </div>
         <button
@@ -52,17 +52,17 @@ export function UploadPanel({ onUpload, uploading }: UploadPanelProps) {
           await handleFiles(event.dataTransfer.files);
         }}
         onClick={() => fileRef.current?.click()}
-        className={`mt-5 w-full rounded-[1.75rem] border border-dashed p-6 text-left transition xl:p-5 ${
+        className={`mt-4 w-full rounded-[1.25rem] border border-dashed px-4 py-5 text-left transition ${
           dragging
             ? "border-gold bg-gold/10"
             : "border-white/15 bg-white/[0.03] hover:border-sapphire/40 hover:bg-white/[0.05]"
         }`}
       >
-        <span className="block text-sm uppercase tracking-[0.35em] text-slate-400">
+        <span className="block text-xs uppercase tracking-[0.3em] text-slate-400">
           {uploading ? "Analyzing..." : "Drag and drop a PDF"}
         </span>
-        <span className="mt-2 block font-display text-xl text-white">
-          Turn long-form narrative into a premium visual timeline.
+        <span className="mt-2 block font-display text-lg text-white">
+          Turn a long-form narrative into a focused timeline and chat workspace.
         </span>
       </button>
 
