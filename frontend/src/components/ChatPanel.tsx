@@ -13,17 +13,17 @@ export function ChatPanel({ onSubmit, disabled = false }: ChatPanelProps) {
   const [loading, setLoading] = useState(false);
 
   return (
-    <section className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-5 backdrop-blur">
+    <section className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-5 backdrop-blur xl:flex xl:min-h-0 xl:flex-col">
       <p className="text-xs uppercase tracking-[0.35em] text-gold">Ask</p>
       <h2 className="mt-3 font-display text-2xl text-white">
         Ask for a character journey across the whole text.
       </h2>
-      <div className="mt-5 flex flex-col gap-3">
+      <div className="mt-4 flex flex-col gap-3 xl:flex-none">
         <textarea
           value={question}
           onChange={(event) => setQuestion(event.target.value)}
           placeholder="Explain Karna's timeline in the whole novel."
-          className="min-h-28 rounded-[1.5rem] border border-white/10 bg-black/15 px-4 py-4 text-sm text-white outline-none placeholder:text-slate-500 focus:border-gold/40"
+          className="min-h-24 rounded-[1.5rem] border border-white/10 bg-black/15 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-gold/40 xl:min-h-20"
         />
         <button
           type="button"
@@ -44,7 +44,7 @@ export function ChatPanel({ onSubmit, disabled = false }: ChatPanelProps) {
       </div>
 
       {result ? (
-        <div className="mt-6 rounded-[1.5rem] border border-white/10 bg-black/15 p-4">
+        <div className="mt-5 rounded-[1.5rem] border border-white/10 bg-black/15 p-4 xl:min-h-0 xl:flex-1 xl:overflow-y-auto">
           <p className="text-sm leading-7 text-slate-200">{result.answer}</p>
           <div className="mt-4 space-y-3">
             {result.citations.map((citation, index) => (

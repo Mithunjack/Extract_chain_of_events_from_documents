@@ -20,6 +20,19 @@ body {
     linear-gradient(180deg, #050a12, #0b1320 40%, #08101c);
 }
 
+#root {
+  min-height: 100vh;
+}
+
+@media (min-width: 1280px) {
+  html,
+  body,
+  #root {
+    height: 100%;
+    overflow: hidden;
+  }
+}
+
 * {
   box-sizing: border-box;
 }

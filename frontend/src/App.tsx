@@ -141,32 +141,32 @@ export default function App() {
   }
 
   return (
-    <main className="min-h-screen bg-ink text-white">
-      <div className="mx-auto max-w-[1600px] px-4 py-6 md:px-8 lg:px-10">
-        <section className="overflow-hidden rounded-[2.5rem] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.18),transparent_26%),radial-gradient(circle_at_top_right,rgba(244,201,107,0.18),transparent_28%),linear-gradient(160deg,#0b1320,#10192c_45%,#08111d)] p-6 shadow-glow md:p-8">
-          <div className="grid gap-6 lg:grid-cols-[320px,1fr]">
+    <main className="min-h-screen bg-ink text-white xl:h-screen xl:overflow-hidden">
+      <div className="mx-auto max-w-[1600px] px-3 py-3 md:px-6 md:py-4 lg:px-8 xl:h-full">
+        <section className="overflow-hidden rounded-[2.5rem] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.18),transparent_26%),radial-gradient(circle_at_top_right,rgba(244,201,107,0.18),transparent_28%),linear-gradient(160deg,#0b1320,#10192c_45%,#08111d)] p-4 shadow-glow md:p-6 xl:flex xl:h-full xl:flex-col">
+          <div className="grid gap-4 lg:grid-cols-[300px,1fr] xl:min-h-0 xl:flex-1">
             <DocumentRail
               documents={documents}
               activeDocumentId={activeDocumentId}
               onSelect={setActiveDocumentId}
             />
 
-            <div className="space-y-6">
-              <header className="flex flex-col gap-6 rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 backdrop-blur lg:flex-row lg:items-end lg:justify-between">
+            <div className="space-y-4 xl:flex xl:min-h-0 xl:flex-col xl:space-y-4">
+              <header className="flex flex-col gap-4 rounded-[2rem] border border-white/10 bg-white/[0.03] p-5 backdrop-blur lg:flex-row lg:items-end lg:justify-between xl:flex-none">
                 <div>
                   <p className="text-xs uppercase tracking-[0.38em] text-gold">
                     Narrative Atlas
                   </p>
-                  <h1 className="mt-3 max-w-3xl font-display text-5xl leading-tight text-white md:text-6xl">
+                  <h1 className="mt-3 max-w-3xl font-display text-3xl leading-tight text-white md:text-4xl xl:text-5xl">
                     Cinematic timelines for long-form documents.
                   </h1>
-                  <p className="mt-4 max-w-3xl text-sm leading-8 text-slate-300">
+                  <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300">
                     Upload a novel, extract the major entities automatically, and move
                     through a premium story map that shows a character&apos;s chain of events
                     from beginning to end.
                   </p>
                 </div>
-                <div className="grid gap-3 sm:grid-cols-3">
+                <div className="grid gap-3 sm:grid-cols-3 lg:max-w-[520px]">
                   {[
                     ["Local-first", "No paid API dependency"],
                     ["Entity-centric", "Timelines built after upload"],
@@ -197,7 +197,7 @@ export default function App() {
                 onSelect={setActiveEntity}
               />
 
-              <div className="grid gap-6 xl:grid-cols-[1.6fr,0.95fr]">
+              <div className="grid gap-4 xl:min-h-0 xl:flex-1 xl:grid-cols-[minmax(0,1.55fr),minmax(340px,0.95fr)]">
                 <CinematicTimeline
                   entity={timeline.entity}
                   overview={timeline.overview}
@@ -210,7 +210,7 @@ export default function App() {
         </section>
 
         {!documents.length ? (
-          <div className="mt-6">
+          <div className="mt-4 xl:hidden">
             <EmptyState
               title="No document ingested yet"
               description="The interface is ready with a premium preview timeline, but upload a long-form PDF to switch from demo storytelling into grounded, document-backed analysis."

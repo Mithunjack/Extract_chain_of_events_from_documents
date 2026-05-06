@@ -13,14 +13,14 @@ export function DocumentRail({
   onSelect
 }: DocumentRailProps) {
   return (
-    <aside className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
+    <aside className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-4 backdrop-blur xl:flex xl:min-h-0 xl:flex-col">
       <div className="mb-4 flex items-center justify-between">
         <div>
           <p className="text-xs uppercase tracking-[0.3em] text-gold">Library</p>
           <h2 className="mt-2 font-display text-2xl text-white">Documents</h2>
         </div>
       </div>
-      <div className="space-y-3">
+      <div className="space-y-3 xl:min-h-0 xl:flex-1 xl:overflow-y-auto xl:pr-1">
         {documents.map((document) => (
           <button
             key={document.id}

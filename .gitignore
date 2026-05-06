@@ -15,5 +15,6 @@ token.json
 .worktrees/
 frontend/node_modules/
 frontend/dist/
+frontend/*.tsbuildinfo
 backend/.pytest_cache/
 .venv/
