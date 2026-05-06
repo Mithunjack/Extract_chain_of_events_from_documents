@@ -5,7 +5,7 @@
 Modernize this repository into a local-first document intelligence application with two primary capabilities:
 
 1. Retrieval-augmented question answering over uploaded PDF documents
-2. Structured event extraction that turns document content into a timeline view
+2. Automatic entity-centric narrative timeline extraction that turns long-form documents into chain-of-events views
 
 The system must run fully locally, provide a web interface, and avoid paid API dependencies.
 
@@ -18,7 +18,9 @@ The system must run fully locally, provide a web interface, and avoid paid API d
 - Chunk and embed document content locally
 - Store metadata, vectors, and extracted events locally
 - Ask grounded questions over selected documents and receive cited answers
-- Extract structured events from documents and render them in a timeline-friendly format
+- Automatically start post-upload narrative analysis
+- Extract entity-centric story events from documents and render them in a timeline-friendly format
+- Let a user ask for a character or entity timeline such as "explain Karna's timeline in the whole novel"
 - Run locally through Docker Compose with persistent storage
 
 ### Out of Scope
@@ -28,13 +30,14 @@ The system must run fully locally, provide a web interface, and avoid paid API d
 - Cloud deployment automation
 - Fine-tuning or training custom models
 - Complex workflow orchestration infrastructure
+- Fully general knowledge graph construction beyond the document's narrative needs
 
 ## Recommended Architecture
 
 Use a modern split application:
 
-- `backend/`: FastAPI application exposing ingestion, retrieval, Q&A, and event extraction APIs
-- `frontend/`: React + Vite web app for upload, chat, document browsing, and timeline visualization
+- `backend/`: FastAPI application exposing ingestion, retrieval, entity extraction, timeline generation, and Q&A APIs
+- `frontend/`: React + Vite web app for upload, document browsing, entity search, and timeline visualization
 - `storage/`: local persisted data for uploaded files, SQLite database, and vector index
 - `docker-compose.yml`: local startup for backend, frontend, Ollama, and mounted persistent volumes
 
@@ -87,11 +90,29 @@ Responsibilities:
 
 Responsibilities:
 
-- Select event-relevant chunks from indexed content
-- Prompt the local LLM for strict JSON output
-- Validate output against a typed event schema
-- Normalize dates, times, and source references
+- Select narrative-relevant chunks from indexed content
+- Extract candidate story events in structured form
+- Associate candidate events with one or more entities
+- Normalize source references and event ordering metadata
 - Persist accepted events for later review and display
+
+#### Entity Resolution Service
+
+Responsibilities:
+
+- Extract candidate named entities such as characters, places, and groups
+- Merge aliases and variant mentions for the same entity
+- Link pronoun-heavy or partial mentions back to likely entities when confidence is high
+- Persist canonical entity records for downstream timeline generation
+
+#### Narrative Timeline Service
+
+Responsibilities:
+
+- Group events by entity
+- Infer likely story sequence when exact dates are absent
+- Build a chain-of-events timeline from birth to death or first mention to final state
+- Return timeline entries with supporting passages and confidence metadata
 
 #### Repository Layer
 
@@ -111,8 +132,8 @@ Responsibilities:
 #### Documents View
 
 - List uploaded files
-- Show ingestion and extraction status
-- Allow document selection for chat scope
+- Show ingestion and analysis status
+- Allow document selection for chat scope or entity browsing
 
 #### Chat View
 
@@ -122,8 +143,14 @@ Responsibilities:
 
 #### Timeline View
 
-- Display extracted events in chronological order
-- Show date, time, title, source document, and validation status
+- Display extracted narrative events in inferred story order
+- Show entity, event title, event summary, source document, source passage, and confidence
+
+#### Entity View
+
+- List detected entities after analysis completes
+- Show aliases, mention counts, and analysis readiness
+- Let the user open a character-centric timeline directly
 
 ## Data Model
 
@@ -137,6 +164,16 @@ Responsibilities:
 - `created_at`
 - `updated_at`
 - `error_message`
+
+### entities
+
+- `id`
+- `document_id`
+- `canonical_name`
+- `entity_type`
+- `aliases_json`
+- `mention_count`
+- `created_at`
 
 ### document_chunks
 
@@ -152,16 +189,16 @@ Responsibilities:
 
 - `id`
 - `document_id`
+- `entity_id`
 - `title`
 - `description`
-- `start_date`
-- `start_time`
-- `end_date`
-- `end_time`
+- `sequence_index`
+- `event_phase`
 - `source_page`
 - `source_text`
 - `confidence`
 - `validation_status`
+- `extraction_method`
 - `created_at`
 
 ### chat_sessions
@@ -189,6 +226,16 @@ Responsibilities:
 5. Backend chunks text and computes local embeddings
 6. Backend stores metadata in SQLite and vectors in Chroma
 7. Backend marks document status as indexed or failed
+8. Backend automatically starts post-upload narrative analysis
+
+### Narrative Analysis
+
+1. Backend scans indexed content to detect candidate entities
+2. Backend merges aliases and creates canonical entity records
+3. Backend extracts candidate story events from chunks or chapter windows
+4. Backend links each event to one or more entities
+5. Backend orders events using local sequence signals such as chapter position, cue phrases, and model inference
+6. Backend stores entity records and ordered event chains for timeline rendering
 
 ### Question Answering
 
@@ -198,14 +245,13 @@ Responsibilities:
 4. Ollama generates an answer constrained to that context
 5. Backend returns answer text and citations
 
-### Event Extraction
+### Timeline Query
 
-1. Backend selects likely event-bearing chunks from indexed documents
-2. Backend prompts Ollama for strict structured JSON
-3. Backend validates the returned payload
-4. Backend normalizes fields like date and time
-5. Backend stores valid events and marks invalid ones as rejected or failed
-6. Frontend renders the timeline from persisted event data
+1. User opens an entity timeline or asks a query like "explain Karna's timeline in the whole novel"
+2. Backend resolves the requested entity against canonical entity records
+3. Backend loads stored event chains and supporting passages for that entity
+4. Backend optionally uses the local LLM to produce a concise narrative overview grounded in stored events
+5. Frontend renders the ordered chain of events with expandable evidence
 
 ## Runtime Behavior
 
@@ -214,6 +260,7 @@ Responsibilities:
 - The UI should treat ingestion as asynchronous
 - The initial implementation may use lightweight background tasks in FastAPI
 - The architecture should leave room for a job queue later if needed
+- Narrative analysis should begin automatically after a document is indexed
 
 ### Storage Model
 
@@ -224,27 +271,31 @@ Responsibilities:
 ### Model Usage
 
 - Embeddings are generated with a local sentence-transformer model
-- Answer generation and event extraction run through Ollama
-- Event extraction uses a stricter structured-output prompt than chat answering
+- Answer generation and narrative extraction run through Ollama
+- Narrative extraction uses stricter structured-output prompts than chat answering
+- Ordering can combine deterministic sequence signals with model-assisted ranking
 
 ## Error Handling
 
 - Reject unsupported file types cleanly
 - Reject oversized uploads with clear messages
 - Track document lifecycle with explicit statuses such as `uploaded`, `parsed`, `indexed`, and `failed`
-- Allow partial success: indexing can succeed even if event extraction fails
+- Track analysis lifecycle separately so indexing can succeed even if timeline extraction fails
 - Validate all structured LLM output before persistence
 - Return stable API error shapes for frontend rendering
+- Preserve low-confidence entity/event candidates for debugging only when useful, but do not surface them as final timeline facts by default
 
 ## Testing Strategy
 
 ### Backend Tests
 
 - Unit tests for chunking behavior
+- Unit tests for entity alias merging
 - Unit tests for event schema validation and normalization
+- Unit tests for sequence ordering heuristics
 - Unit tests for retrieval filters and citation formatting
 - Integration tests for upload -> index -> query
-- Integration tests for upload -> extract events
+- Integration tests for upload -> analyze entities -> build timeline
 
 ### Frontend Tests
 
@@ -273,9 +324,9 @@ The current repository should be simplified and reorganized to match the target 
 
 1. Stabilize backend package structure and configuration
 2. Implement ingestion, chunking, and local vector indexing
-3. Implement retrieval-backed Q&A with citations
-4. Implement structured event extraction and normalization
-5. Build the frontend upload, chat, and timeline views
+3. Implement automatic entity extraction and narrative event pipeline
+4. Implement retrieval-backed Q&A with citations and entity-aware timeline queries
+5. Build the frontend upload, entity, chat, and timeline views
 6. Add tests, Docker Compose polish, and documentation cleanup
 
 ## Success Criteria
@@ -283,6 +334,7 @@ The current repository should be simplified and reorganized to match the target 
 - A new user can run the project locally with documented setup steps
 - PDFs can be uploaded and indexed without manual intervention
 - Questions return grounded answers with document/page citations
-- Events are extracted into a structured timeline view
+- Character or entity timelines are generated automatically after upload
+- A query like "explain Karna's timeline in the whole novel" returns an ordered chain of events with evidence
 - Core flows are covered by automated tests
 - The codebase is modular, maintainable, and clearly more modern than the original prototype
