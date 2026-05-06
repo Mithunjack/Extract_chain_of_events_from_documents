@@ -44,7 +44,8 @@ run_locally() {
   print_step "Starting local backend and frontend"
   cd "${ROOT_DIR}"
 
-  if [[ ! -d "${ROOT_DIR}/.venv" ]]; then
+  if [[ ! -x "${ROOT_DIR}/.venv/bin/python" ]]; then
+    rm -rf "${ROOT_DIR}/.venv"
     python3 -m venv .venv
   fi
 

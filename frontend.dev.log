@@ -1,0 +1,9 @@
+
+> narrative-atlas-frontend@0.1.0 dev
+> vite --host 0.0.0.0
+
+
+  VITE v6.4.2  ready in 280 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: http://172.16.140.2:5173/
