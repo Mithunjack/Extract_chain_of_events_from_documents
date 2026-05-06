@@ -13,3 +13,6 @@ token.json
 *.chainlit
 *.sql
 .worktrees/
+frontend/node_modules/
+frontend/dist/
+backend/.pytest_cache/
