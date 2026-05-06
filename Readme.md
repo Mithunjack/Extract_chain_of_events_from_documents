@@ -20,6 +20,27 @@ Narrative Atlas is a local-first document analysis app for turning long-form PDF
 
 ## Local Development
 
+## One Command
+
+From the repo root, run:
+
+```bash
+./run.sh
+```
+
+What it does:
+
+- Creates `.env` from `.env.example` if needed
+- Uses `docker compose up --build` automatically when Docker is available
+- Falls back to local startup when both `python3` and `npm` are installed
+
+You can also force a mode:
+
+```bash
+./run.sh docker
+./run.sh local
+```
+
 ### Backend
 
 ```bash

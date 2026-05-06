@@ -16,3 +16,4 @@ token.json
 frontend/node_modules/
 frontend/dist/
 backend/.pytest_cache/
+.venv/
