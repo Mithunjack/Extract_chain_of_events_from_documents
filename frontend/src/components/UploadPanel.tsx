@@ -18,7 +18,7 @@ export function UploadPanel({ onUpload, uploading }: UploadPanelProps) {
   }
 
   return (
-    <section className="rounded-[2rem] border border-gold/20 bg-[radial-gradient(circle_at_top,#19304f,transparent_60%),linear-gradient(135deg,#101c2d,#0b1320)] p-5 shadow-glow xl:flex-none">
+    <section className="rounded-[2rem] border border-gold/20 bg-[radial-gradient(circle_at_top,#19304f,transparent_60%),linear-gradient(135deg,#101c2d,#0b1320)] p-5 shadow-glow">
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-xs uppercase tracking-[0.35em] text-gold">Upload</p>

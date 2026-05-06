@@ -24,15 +24,6 @@ body {
   min-height: 100vh;
 }
 
-@media (min-width: 1280px) {
-  html,
-  body,
-  #root {
-    height: 100%;
-    overflow: hidden;
-  }
-}
-
 * {
   box-sizing: border-box;
 }

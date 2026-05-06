@@ -141,18 +141,18 @@ export default function App() {
   }
 
   return (
-    <main className="min-h-screen bg-ink text-white xl:h-screen xl:overflow-hidden">
-      <div className="mx-auto max-w-[1600px] px-3 py-3 md:px-6 md:py-4 lg:px-8 xl:h-full">
-        <section className="overflow-hidden rounded-[2.5rem] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.18),transparent_26%),radial-gradient(circle_at_top_right,rgba(244,201,107,0.18),transparent_28%),linear-gradient(160deg,#0b1320,#10192c_45%,#08111d)] p-4 shadow-glow md:p-6 xl:flex xl:h-full xl:flex-col">
-          <div className="grid gap-4 lg:grid-cols-[300px,1fr] xl:min-h-0 xl:flex-1">
+    <main className="min-h-screen bg-ink text-white">
+      <div className="mx-auto max-w-[1600px] px-3 py-3 md:px-6 md:py-4 lg:px-8">
+        <section className="overflow-hidden rounded-[2.5rem] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.18),transparent_26%),radial-gradient(circle_at_top_right,rgba(244,201,107,0.18),transparent_28%),linear-gradient(160deg,#0b1320,#10192c_45%,#08111d)] p-4 shadow-glow md:p-6">
+          <div className="grid gap-4 lg:grid-cols-[300px,1fr]">
             <DocumentRail
               documents={documents}
               activeDocumentId={activeDocumentId}
               onSelect={setActiveDocumentId}
             />
 
-            <div className="space-y-4 xl:flex xl:min-h-0 xl:flex-col xl:space-y-4">
-              <header className="flex flex-col gap-4 rounded-[2rem] border border-white/10 bg-white/[0.03] p-5 backdrop-blur lg:flex-row lg:items-end lg:justify-between xl:flex-none">
+            <div className="space-y-4">
+              <header className="flex flex-col gap-4 rounded-[2rem] border border-white/10 bg-white/[0.03] p-5 backdrop-blur lg:flex-row lg:items-end lg:justify-between">
                 <div>
                   <p className="text-xs uppercase tracking-[0.38em] text-gold">
                     Narrative Atlas
@@ -197,7 +197,7 @@ export default function App() {
                 onSelect={setActiveEntity}
               />
 
-              <div className="grid gap-4 xl:min-h-0 xl:flex-1 xl:grid-cols-[minmax(0,1.55fr),minmax(340px,0.95fr)]">
+              <div className="grid gap-4 xl:grid-cols-[minmax(0,1.55fr),minmax(340px,0.95fr)]">
                 <CinematicTimeline
                   entity={timeline.entity}
                   overview={timeline.overview}

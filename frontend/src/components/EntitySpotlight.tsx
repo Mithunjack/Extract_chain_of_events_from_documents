@@ -12,9 +12,9 @@ export function EntitySpotlight({
   onSelect
 }: EntitySpotlightProps) {
   return (
-    <section className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-4 backdrop-blur xl:flex-none">
+    <section className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
       <p className="text-xs uppercase tracking-[0.35em] text-gold">Entity Atlas</p>
-      <div className="mt-4 flex max-h-28 flex-wrap gap-2 overflow-y-auto pr-1 xl:max-h-24">
+      <div className="mt-4 flex max-h-28 flex-wrap gap-2 overflow-y-auto pr-1">
         {entities.map((entity) => {
           const selected = entity.canonical_name === activeEntity;
           return (

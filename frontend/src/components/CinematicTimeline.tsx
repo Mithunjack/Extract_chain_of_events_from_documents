@@ -22,8 +22,8 @@ export function CinematicTimeline({
   events
 }: CinematicTimelineProps) {
   return (
-    <section className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] p-5 shadow-glow backdrop-blur xl:flex xl:min-h-0 xl:flex-col">
-      <div className="flex flex-col gap-3 border-b border-white/10 pb-4 md:flex-row md:items-end md:justify-between xl:flex-none">
+    <section className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] p-5 shadow-glow backdrop-blur">
+      <div className="flex flex-col gap-3 border-b border-white/10 pb-4 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="text-xs uppercase tracking-[0.35em] text-gold">Timeline</p>
           <h2 className="mt-2 font-display text-3xl text-white xl:text-[2rem]">{entity}</h2>
@@ -34,7 +34,7 @@ export function CinematicTimeline({
         </div>
       </div>
 
-      <div className="relative mt-5 space-y-4 before:absolute before:left-[1.08rem] before:top-4 before:h-[calc(100%-2rem)] before:w-px before:bg-gradient-to-b before:from-gold/80 before:to-sapphire/20 md:before:left-6 xl:min-h-0 xl:flex-1 xl:overflow-y-auto xl:pr-2">
+      <div className="relative mt-5 space-y-4 before:absolute before:left-[1.08rem] before:top-4 before:h-[calc(100%-2rem)] before:w-px before:bg-gradient-to-b before:from-gold/80 before:to-sapphire/20 md:before:left-6 lg:max-h-[calc(100vh-22rem)] lg:overflow-y-auto lg:pr-2">
         {events.map((event, index) => (
           <article
             key={event.id}

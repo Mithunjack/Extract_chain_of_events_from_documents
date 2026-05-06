@@ -1,6 +1,6 @@
 INFO:     Will watch for changes in these directories: ['/Users/mithun/Extract_chain_of_events_from_documents']
 INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
-INFO:     Started reloader process [63393] using WatchFiles
+INFO:     Started reloader process [66028] using WatchFiles
 Process SpawnProcess-1:
 Traceback (most recent call last):
   File "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
