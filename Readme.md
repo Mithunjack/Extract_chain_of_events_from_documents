@@ -29,6 +29,16 @@ pip install -r requirements.txt
 uvicorn backend.app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
+Create or edit `.env` at the repo root to control local models and API keys:
+
+```env
+NARRATIVE_ATLAS_LLM_PROVIDER=ollama
+NARRATIVE_ATLAS_OPENAI_API_KEY=your_openai_key_here
+NARRATIVE_ATLAS_OPENAI_MODEL=gpt-4.1-mini
+```
+
+The app still defaults to Ollama, but the OpenAI key is now available in config whenever you want to wire API-backed generation later.
+
 ### Frontend
 
 ```bash
